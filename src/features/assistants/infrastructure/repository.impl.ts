@@ -9,7 +9,7 @@ import {
     type AssistantDataSource,
 } from '../domain';
 
-export class TodoRepositoryImpl implements AssistantRepository {
+export class AssistantRepositoryImpl implements AssistantRepository {
     constructor(private readonly datasource: AssistantDataSource) { }
 
     async create(createDto: CreateAssistantDto): Promise<AssistantEntity> {
