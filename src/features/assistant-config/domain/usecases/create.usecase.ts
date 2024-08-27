@@ -6,7 +6,7 @@ export interface CreateAssisTantUseCase {
     execute: (data: CreateAssistantConfigDto) => Promise<AssistantConfigEntity>;
 }
 
-export class CreateAssistant implements CreateAssisTantUseCase {
+export class CreateAssistantConfig implements CreateAssisTantUseCase {
     constructor(private readonly repository: AssistantConfigRepository) { }
 
     async execute(data: CreateAssistantConfigDto): Promise<AssistantConfigEntity> {

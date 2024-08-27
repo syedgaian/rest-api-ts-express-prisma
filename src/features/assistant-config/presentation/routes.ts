@@ -2,18 +2,18 @@
 
 import { Router } from 'express';
 
-import { AssistantController } from './controller';
+import { AssistantConfigController } from './controller';
 import { AuthDatasourceImpl, AuthMiddleware, AuthRepositoryImpl } from '../../auth';
-import { AssistantDatasourceImpl, AssistantRepositoryImpl } from '../infrastructure';
+import { AssistantConfigDatasourceImpl, AssistantConfigRepositoryImpl } from '../infrastructure';
 
 export class AssistantRoutes {
     static get routes(): Router {
         const router = Router();
 
         //* This datasource can be change
-        const datasource = new AssistantDatasourceImpl();
-        const repository = new AssistantRepositoryImpl(datasource);
-        const controller = new AssistantController(repository);
+        const datasource = new AssistantConfigDatasourceImpl();
+        const repository = new AssistantConfigRepositoryImpl(datasource);
+        const controller = new AssistantConfigController(repository);
 
         // * Authentication middleware
         const authDatasource = new AuthDatasourceImpl();

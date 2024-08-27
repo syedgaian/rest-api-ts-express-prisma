@@ -9,7 +9,7 @@ import {
     type AssistantConfigDataSource,
 } from '../domain';
 
-export class AssistantRepositoryImpl implements AssistantConfigRepository {
+export class AssistantConfigRepositoryImpl implements AssistantConfigRepository {
     constructor(private readonly datasource: AssistantConfigDataSource) { }
 
     async create(createDto: CreateAssistantConfigDto): Promise<AssistantConfigEntity> {

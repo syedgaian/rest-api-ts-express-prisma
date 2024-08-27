@@ -20,7 +20,7 @@ const ASSISTANTS_CONFIG_MOCK = [
     }
 ];
 
-export class AssistantDatasourceImpl implements AssistantConfigDataSource {
+export class AssistantConfigDatasourceImpl implements AssistantConfigDataSource {
 
 
     public async create(createDto: CreateAssistantConfigDto): Promise<AssistantConfigEntity> {
