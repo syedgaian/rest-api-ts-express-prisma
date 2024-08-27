@@ -1,18 +1,13 @@
-model AssistantMetadata {
+model AssistantConfig {
   id                 String      @id @default(uuid())
   assistantId        String      @unique
-  languages          String[]
   capabilities       String[]
   maxTokens          Int
   temperature        Float
   topP               Float
-  frequencyPenalty   Float
-  presencePenalty    Float
-  agentType          String // Type of agent (e.g., 'LangGraph Agent')
-  model              String // Specific OpenAI model used (e.g., 'gpt-4')
-  apiKey             String? // API key for accessing the LangGraph service
+  agentType          String 
+  model              String 
   trainingDataCutoff DateTime?
   deployedAt         DateTime?
   lastActiveAt       DateTime?
-  Assistant          Assistant[]
 }

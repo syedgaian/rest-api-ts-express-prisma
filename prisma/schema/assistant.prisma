@@ -6,6 +6,6 @@ model Assistant {
   status      String
   createdAt   DateTime           @default(now())
   updatedAt   DateTime           @updatedAt
-  metadata    AssistantMetadata? @relation(fields: [metadataId], references: [id])
-  metadataId  String?
+  config    AssistantConfig? @relation(fields: [configId], references: [id])
+  configId  String?
 }
