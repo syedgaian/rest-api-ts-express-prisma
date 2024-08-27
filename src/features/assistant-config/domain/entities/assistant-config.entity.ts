@@ -24,12 +24,10 @@ export class AssistantConfigEntity {
             createdAt = new Date(), updatedAt = new Date(), deployedAt = null, lastActiveAt = null
         } = obj;
 
-        if (!id) {
-            throw AppError.badRequest('This entity requires an id', [{ constraint: 'id is required', fields: ['id'] }]);
-        }
         if (!assistantId) {
             throw AppError.badRequest('This entity requires an assistantId', [{ constraint: 'assistantId is required', fields: ['assistantId'] }]);
         }
+
         return new AssistantConfigEntity(
             id as string,
             assistantId as string,

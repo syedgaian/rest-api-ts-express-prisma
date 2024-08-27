@@ -3,7 +3,10 @@
 import { AppError, ZERO } from '../../../../core';
 import { AssistantConfigEntity } from '../../../assistant-config/domain/entities/assistant-config.entity';
 
-type AssistantStatus = "active" | "inactive"
+export enum AssistantStatus {
+    ACTIVE = "active",
+    INACTIVE = "inactive"
+}
 
 export class AssistantEntity {
     constructor(
@@ -11,18 +14,18 @@ export class AssistantEntity {
         public name: string,
         public version: string,
         public description: string,
-        public status: AssistantStatus = 'active',
+        public status: AssistantStatus = AssistantStatus.ACTIVE,
         public createdAt: Date = new Date(),
         public updatedAt: Date = new Date(),
-        public metadataId: string | null = null,
-        public metadata: AssistantConfigEntity | null = null
+        public configId: string | null = null,
+        public config: AssistantConfigEntity | null = null
     ) { }
 
     public static fromJson(obj: Record<string, unknown>): AssistantEntity {
 
         const {
             id, name, version, description, status = 'active',
-            createdAt = new Date(), updatedAt = new Date(), metadataId = null, metadata = null
+            createdAt = new Date(), updatedAt = new Date(), configId = null, config = null
         } = obj;
 
         if (!id) {
@@ -46,8 +49,8 @@ export class AssistantEntity {
             status as AssistantStatus,
             new Date(createdAt as string),
             new Date(updatedAt as string),
-            metadataId as string | null,
-            metadata ? AssistantConfigEntity.fromJson(metadata as Record<string, unknown>) : null
+            configId as string | null,
+            config ? AssistantConfigEntity.fromJson(config as Record<string, unknown>) : null
         );
     }
 }

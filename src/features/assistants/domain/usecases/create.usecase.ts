@@ -1,3 +1,5 @@
+// src/features/assistants/domain/usecase/create.usecase
+
 import { type CreateAssistantDto } from '../dtos';
 import { type AssistantEntity } from '../entities';
 import { type AssistantRepository } from '../repositories/repository';
