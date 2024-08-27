@@ -1,7 +1,7 @@
 // src\features\assistants\domain\entities\assistant.entity.ts
 
 import { AppError, ZERO } from '../../../../core';
-import { AssistantConfigEntity } from './assistantMetadata.entity';
+import { AssistantConfigEntity } from '../../../assistantConfig/domain/entities/assistantConfig.entity';
 
 type AssistantStatus = "active" | "inactive"
 
