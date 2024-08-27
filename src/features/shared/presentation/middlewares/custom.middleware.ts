@@ -1,5 +1,5 @@
 import { type Response, type NextFunction, type Request } from 'express';
-import rfs from 'rotating-file-stream';
+import * as rfs from 'rotating-file-stream';
 import path from "path";
 import morgan from "morgan";
 
