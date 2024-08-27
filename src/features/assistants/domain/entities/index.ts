@@ -1,2 +1,2 @@
 export * from "./assistant.entity";
-export * from "../../../assistantConfig/domain/entities/assistantConfig.entity";
+export * from "../../../assistant-config/domain/entities/assistant-config.entity";

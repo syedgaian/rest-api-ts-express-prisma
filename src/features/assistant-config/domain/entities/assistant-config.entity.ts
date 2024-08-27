@@ -1,24 +1,24 @@
 // src\features\assistants\domain\entities\assistantMetadata.entity.ts
 
-import { AppError, ZERO } from '../../../../core';
+import { AppError, DEFAULT_AGENT_TYPE, DEFAULT_MODEL, DEFAULT_TEMPERATURE, DEFAULT_TOPP } from '../../../../core';
 
 export class AssistantConfigEntity {
     constructor(
         public id: string,
         public assistantId: string,
-        public capabilities: Array<string> = [],
-        public temperature: number = 0.7,
-        public topP: number = 1.0,
-        public agentType: string = 'LangGraph Agent',
-        public model: string = 'gpt-4',
+        public tools: Array<string> = [],
+        public temperature: number = DEFAULT_TEMPERATURE,
+        public topP: number = DEFAULT_TOPP,
+        public agentType: string = DEFAULT_AGENT_TYPE,
+        public model: string = DEFAULT_MODEL,
         public deployedAt: Date | null = null,
         public lastActiveAt: Date | null = null
     ) { }
 
     public static fromJson(obj: Record<string, unknown>): AssistantConfigEntity {
         const {
-            id, assistantId, capabilities = [], temperature = 0.7,
-            topP = 1.0, agentType = 'LangGraph Agent', model = 'gpt-4',
+            id, assistantId, tools = [], temperature = DEFAULT_TEMPERATURE,
+            topP = DEFAULT_TOPP, agentType = DEFAULT_AGENT_TYPE, model = DEFAULT_MODEL,
             deployedAt = null, lastActiveAt = null
         } = obj;
 
@@ -31,7 +31,7 @@ export class AssistantConfigEntity {
         return new AssistantConfigEntity(
             id as string,
             assistantId as string,
-            capabilities as Array<string>,
+            tools as Array<string>,
             temperature as number,
             topP as number,
             agentType as string,
