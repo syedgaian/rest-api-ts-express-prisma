@@ -11,6 +11,8 @@ export class AssistantConfigEntity {
         public topP: number = DEFAULT_TOPP,
         public agentType: string = DEFAULT_AGENT_TYPE,
         public model: string = DEFAULT_MODEL,
+        public createdAt: Date = new Date(),
+        public updatedAt: Date = new Date(),
         public deployedAt: Date | null = null,
         public lastActiveAt: Date | null = null
     ) { }
@@ -19,7 +21,7 @@ export class AssistantConfigEntity {
         const {
             id, assistantId, tools = [], temperature = DEFAULT_TEMPERATURE,
             topP = DEFAULT_TOPP, agentType = DEFAULT_AGENT_TYPE, model = DEFAULT_MODEL,
-            deployedAt = null, lastActiveAt = null
+            createdAt = new Date(), updatedAt = new Date(), deployedAt = null, lastActiveAt = null
         } = obj;
 
         if (!id) {
@@ -36,6 +38,8 @@ export class AssistantConfigEntity {
             topP as number,
             agentType as string,
             model as string,
+            new Date(createdAt as string),
+            new Date(updatedAt as string),
             deployedAt ? new Date(deployedAt as string) : null,
             lastActiveAt ? new Date(lastActiveAt as string) : null
         );

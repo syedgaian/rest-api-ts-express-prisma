@@ -7,7 +7,8 @@ model AssistantConfig {
   topP               Float
   agentType          String 
   model              String 
-  trainingDataCutoff DateTime?
   deployedAt         DateTime?
   lastActiveAt       DateTime?
+  createdAt          DateTime     @default(now())
+  updatedAt          DateTime     @updatedAt
 }
