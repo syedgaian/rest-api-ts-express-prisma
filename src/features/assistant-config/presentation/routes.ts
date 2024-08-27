@@ -6,7 +6,7 @@ import { AssistantConfigController } from './controller';
 import { AuthDatasourceImpl, AuthMiddleware, AuthRepositoryImpl } from '../../auth';
 import { AssistantConfigDatasourceImpl, AssistantConfigRepositoryImpl } from '../infrastructure';
 
-export class AssistantRoutes {
+export class AssistantConfigRoutes {
     static get routes(): Router {
         const router = Router();
 
