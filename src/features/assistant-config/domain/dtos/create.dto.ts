@@ -5,6 +5,7 @@ export class CreateAssistantConfigDto implements CoreDto<CreateAssistantConfigDt
 
     constructor(
         public readonly assistantId: string,
+        public readonly instructions: string,
         public readonly tools: Array<string> = [],
         public readonly temperature: number = DEFAULT_TEMPERATURE,
         public readonly topP: number = DEFAULT_TOPP,
@@ -18,13 +19,17 @@ export class CreateAssistantConfigDto implements CoreDto<CreateAssistantConfigDt
 
     validate(dto: CreateAssistantConfigDto): void {
         const errors: ValidationType[] = [];
-        const { assistantId } = dto;
+        const { assistantId, instructions } = dto;
 
         if (!assistantId || assistantId.length === ZERO) {
             errors.push({ constraint: 'assistantId is required', fields: ['assistantId'] });
         }
 
-        if (errors.length > ZERO) throw AppError.badRequest('Error validating create Assistant', errors);
+        if (!instructions || instructions.length === ZERO) {
+            errors.push({ constraint: 'instructions is required', fields: ['instructions'] });
+        }
+
+        if (errors.length > ZERO) throw AppError.badRequest('Error validating create AssistantConfig', errors);
     }
 
     /**
@@ -36,6 +41,7 @@ export class CreateAssistantConfigDto implements CoreDto<CreateAssistantConfigDt
     public static create(object: Record<string, unknown>): CreateAssistantConfigDto {
         const {
             assistantId,
+            instructions,
             tools = [],
             temperature = DEFAULT_TEMPERATURE,
             topP = DEFAULT_TOPP,
@@ -47,6 +53,7 @@ export class CreateAssistantConfigDto implements CoreDto<CreateAssistantConfigDt
 
         return new CreateAssistantConfigDto(
             assistantId as string,
+            instructions as string,
             tools as Array<string>,
             temperature as number,
             topP as number,

@@ -1,6 +1,7 @@
 model AssistantConfig {
   id                 String      @id @default(uuid())
   assistantId        String      @unique
+  instructions       String     
   tools              String[]
   maxTokens          Int
   temperature        Float
