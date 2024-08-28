@@ -2,13 +2,13 @@
 
 import { AppError, ZERO } from '../../../../core';
 
-export class AssistantEntity {
+export class ChatResponseEntity {
     constructor(
         public assistantId: string,
         public prompt: string,
     ) { }
 
-    public static fromJson(obj: Record<string, unknown>): AssistantEntity {
+    public static fromJson(obj: Record<string, unknown>): ChatResponseEntity {
 
         const { assistantId, prompt } = obj;
 
@@ -19,7 +19,7 @@ export class AssistantEntity {
             throw AppError.badRequest('This entity requires a prompt', [{ constraint: 'prompt is required', fields: ['prompt'] }]);
         }
 
-        return new AssistantEntity(
+        return new ChatResponseEntity(
             assistantId as string,
             prompt as string,
         );

@@ -1,7 +1,7 @@
 import { type ValidationType, AppError, ZERO } from '../../../../core';
 import { type CoreDto } from '../../../shared';
 
-export class ChatAssistantDto implements CoreDto<ChatAssistantDto> {
+export class ChatWithAssistantDto implements CoreDto<ChatWithAssistantDto> {
     private constructor(
         public readonly assistantId: string,
         public readonly prompt: string,
@@ -9,7 +9,7 @@ export class ChatAssistantDto implements CoreDto<ChatAssistantDto> {
         this.validate(this);
     }
 
-    public validate(dto: ChatAssistantDto): void {
+    public validate(dto: ChatWithAssistantDto): void {
         const errors: ValidationType[] = [];
         const { assistantId, prompt } = dto;
 
@@ -30,10 +30,10 @@ export class ChatAssistantDto implements CoreDto<ChatAssistantDto> {
      * @param object
      * @returns A new instance of this DTO
      */
-    public static create(object: Record<string, unknown>): ChatAssistantDto {
+    public static create(object: Record<string, unknown>): ChatWithAssistantDto {
         const { assistantId, prompt } = object;
 
-        return new ChatAssistantDto(
+        return new ChatWithAssistantDto(
             assistantId as string,
             prompt as string
         );
