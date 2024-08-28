@@ -12,5 +12,5 @@ model AssistantConfig {
   lastActiveAt DateTime?
   createdAt    DateTime    @default(now())
   updatedAt    DateTime    @updatedAt
-  Assistant    Assistant[]
+  Assistant    Assistant @relation(fields: [assistantId], references: [id])
 }

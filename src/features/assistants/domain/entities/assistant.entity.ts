@@ -17,7 +17,6 @@ export class AssistantEntity {
         public status: AssistantStatus = AssistantStatus.ACTIVE,
         public createdAt: Date = new Date(),
         public updatedAt: Date = new Date(),
-        public configId: string | null = null,
         public config: AssistantConfigEntity | null = null
     ) { }
 
@@ -25,7 +24,7 @@ export class AssistantEntity {
 
         const {
             id, name, version, description, status = 'active',
-            createdAt = new Date(), updatedAt = new Date(), configId = null, config = null
+            createdAt = new Date(), updatedAt = new Date(), config = null
         } = obj;
 
         if (!id) {
@@ -49,7 +48,6 @@ export class AssistantEntity {
             status as AssistantStatus,
             new Date(createdAt as string),
             new Date(updatedAt as string),
-            configId as string | null,
             config ? AssistantConfigEntity.fromJson(config as Record<string, unknown>) : null
         );
     }
