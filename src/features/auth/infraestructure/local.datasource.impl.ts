@@ -1,7 +1,7 @@
 // src/features/auth/infraestructure/local.datasource.impl.ts
 
 import { AppError, ONE, basicEncript, basicJWT } from '../../../core';
-import { type RegisterUserDto, type AuthDatasource, UserEntity, AuthEntity, type LoginUserDto } from '../domain';
+import { type RegisterUserDto, type AuthDatasource, UserEntity, AuthEntity, type LoginUserDto, Role } from '../domain';
 
 const USERS_MOCK = [
     {
@@ -10,7 +10,7 @@ const USERS_MOCK = [
         email: 'test@test.com',
         emailVerified: false,
         password: 'ca0711461f3b8387d01cc0c0cf532a4fb4b5fdf0207f7902fa75580718da497a',
-        role: ['USER_ROLE'],
+        role: Role.USER,
         avatar: 'https://avatars.dicebear.com/api/initials/T.svg'
     },
     {
@@ -19,7 +19,7 @@ const USERS_MOCK = [
         email: 'test2@test.com',
         emailVerified: false,
         password: 'ca0711461f3b8387d01cc0c0cf532a4fb4b5fdf0207f7902fa75580718da497a',
-        role: ['USER_ROLE']
+        role: Role.USER
     }
 ];
 
@@ -33,7 +33,7 @@ export class AuthDatasourceImpl implements AuthDatasource {
             ...dto,
             id: (USERS_MOCK.length + ONE).toString(),
             emailVerified: false,
-            role: ['USER_ROLE']
+            role: Role.USER
         };
         // Hash the password
         createdUser.password = basicEncript.hashPassword(dto.password);
