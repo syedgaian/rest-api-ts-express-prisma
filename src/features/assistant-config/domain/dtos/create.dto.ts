@@ -12,7 +12,7 @@ export class CreateAssistantConfigDto implements CoreDto<CreateAssistantConfigDt
         public readonly agentType: string = DEFAULT_AGENT_TYPE,
         public readonly model: string = DEFAULT_MODEL,
         public readonly deployedAt: Date | null = null,
-        public readonly lastActiveAt: Date | null = null
+        public readonly lastActiveAt: Date | null = null,
     ) {
         this.validate(this)
     }
@@ -48,7 +48,7 @@ export class CreateAssistantConfigDto implements CoreDto<CreateAssistantConfigDt
             agentType = DEFAULT_AGENT_TYPE,
             model = DEFAULT_MODEL,
             deployedAt = null,
-            lastActiveAt = null
+            lastActiveAt = null,
         } = object;
 
         return new CreateAssistantConfigDto(
@@ -60,7 +60,7 @@ export class CreateAssistantConfigDto implements CoreDto<CreateAssistantConfigDt
             agentType as string,
             model as string,
             deployedAt as Date | null,
-            lastActiveAt as Date | null
+            lastActiveAt as Date | null,
         );
     }
 }

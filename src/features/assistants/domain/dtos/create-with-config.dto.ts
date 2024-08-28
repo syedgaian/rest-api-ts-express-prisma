@@ -1,6 +1,7 @@
 import { type ValidationType, AppError, ZERO } from '../../../../core';
+import { AssistantConfigEntity } from '../../../assistant-config';
 import { type CoreDto } from '../../../shared';
-import { type AssistantConfigEntity, AssistantStatus } from '../entities';
+import { AssistantStatus } from '../entities';
 
 export class CreateAssistantWithConfigDto implements CoreDto<CreateAssistantWithConfigDto> {
     private constructor(
@@ -35,6 +36,8 @@ export class CreateAssistantWithConfigDto implements CoreDto<CreateAssistantWith
 
         if (!config) {
             errors.push({ constraint: "assistant config is a required field! ", fields: ["config"] })
+        } else if (!config.instructions || config.instructions.length === ZERO) {
+            errors.push({ constraint: "instructions are required field! ", fields: ["config.instructions"] })
         }
 
         if (errors.length > ZERO) throw AppError.badRequest('Error validating create Assistant', errors);
@@ -48,13 +51,14 @@ export class CreateAssistantWithConfigDto implements CoreDto<CreateAssistantWith
      */
     public static create(object: Record<string, unknown>): CreateAssistantWithConfigDto {
         const { name, version, description, status = AssistantStatus.ACTIVE, config } = object;
+        const configEntity = AssistantConfigEntity.fromJson(config as Record<string, unknown>, false)
 
         return new CreateAssistantWithConfigDto(
             name as string,
             version as string,
             description as string,
             status as AssistantStatus,
-            config as AssistantConfigEntity
+            configEntity as AssistantConfigEntity
         );
     }
 

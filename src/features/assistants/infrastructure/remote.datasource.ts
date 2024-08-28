@@ -27,16 +27,28 @@ export class AssistantDatasourceImpl implements AssistantDataSource {
     public async createWithConfig(createDto: CreateAssistantWithConfigDto): Promise<AssistantEntity> {
 
         const { name, description, version, status, config } = createDto;
-        const { temperature, topP, tools } = config
+        const { temperature, topP, tools, model, instructions, agentType, deployedAt, lastActiveAt } = config;
 
-        const assistant = await prisma.assistant.create({
-            data: {
-                name, description, version, status,
-                config: {
-                    create: config
+        try {
+            const assistant = await prisma.assistant.create({
+                data: {
+                    name, description, version, status,
+                    config: {
+                        create: {
+                            temperature, topP, tools, model, instructions, agentType, deployedAt, lastActiveAt
+                        }
+                    }
                 }
-            }
-        })
-        return AssistantEntity.fromJson(assistant);
+            });
+            const assistantConfig = await prisma.assistantConfig.findUnique({
+                where: {
+                    assistantId: assistant.id
+                }
+            })
+            return AssistantEntity.fromJson({ ...assistant, config: assistantConfig });
+        } catch (error) {
+            console.log(error)
+            throw AppError.internalServer("failed")
+        }
     }
 }

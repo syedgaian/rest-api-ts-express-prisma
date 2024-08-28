@@ -18,14 +18,14 @@ export class AssistantConfigEntity {
         public lastActiveAt: Date | null = null
     ) { }
 
-    public static fromJson(obj: Record<string, unknown>): AssistantConfigEntity {
+    public static fromJson(obj: Record<string, unknown>, validateAssistantId: boolean = true): AssistantConfigEntity {
         const {
             id, assistantId, tools = [], temperature = DEFAULT_TEMPERATURE,
             topP = DEFAULT_TOPP, agentType = DEFAULT_AGENT_TYPE, model = DEFAULT_MODEL, instructions,
             createdAt = new Date(), updatedAt = new Date(), deployedAt = null, lastActiveAt = null
         } = obj;
 
-        if (!assistantId) {
+        if (validateAssistantId && !assistantId) {
             throw AppError.badRequest('This AssistantConfig requires an assistantId', [{ constraint: 'assistantId is required', fields: ['assistantId'] }]);
         }
 
