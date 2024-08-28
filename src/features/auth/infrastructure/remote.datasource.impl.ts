@@ -1,35 +1,14 @@
-// src/features/auth/infraestructure/local.datasource.impl.ts
+// src/features/auth/infrastructure/local.datasource.impl.ts
 
 import { AppError, ONE, basicEncript, basicJWT } from '../../../core';
 import {
     UserEntity,
     AuthEntity,
-    Role,
     type RegisterUserDto,
     type AuthDatasource,
     type LoginUserDto
 } from '../domain';
 import { PrismaClient } from '@prisma/client'
-
-const USERS_MOCK = [
-    {
-        id: '1',
-        name: 'Test User',
-        email: 'test@test.com',
-        emailVerified: false,
-        password: 'ca0711461f3b8387d01cc0c0cf532a4fb4b5fdf0207f7902fa75580718da497a',
-        role: Role.USER,
-        avatar: 'https://avatars.dicebear.com/api/initials/T.svg'
-    },
-    {
-        id: '2',
-        name: 'Test User 2',
-        email: 'test2@test.com',
-        emailVerified: false,
-        password: 'ca0711461f3b8387d01cc0c0cf532a4fb4b5fdf0207f7902fa75580718da497a',
-        role: Role.USER
-    }
-];
 
 export class AuthDatasourceImpl implements AuthDatasource {
     private readonly prisma = new PrismaClient({})
