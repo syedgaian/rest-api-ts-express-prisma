@@ -6,9 +6,16 @@ import {
     AssistantEntity,
     type CreateAssistantDto,
     type AssistantDataSource,
-    type CreateAssistantWithConfigDto
+    type CreateAssistantWithConfigDto,
+    ChatResponseEntity,
+    ChatWithAssistantDto
 } from '../domain';
 import { prisma } from "../../../client"
+import "dotenv/config";
+import { ChatOpenAI } from '@langchain/openai';
+import { createAgent, agentNode } from '../helpers';
+import { AgentState } from '../config';
+import { HumanMessage } from "@langchain/core/messages";
 
 
 export class AssistantDatasourceImpl implements AssistantDataSource {
@@ -50,5 +57,34 @@ export class AssistantDatasourceImpl implements AssistantDataSource {
             console.log(error)
             throw AppError.internalServer("failed")
         }
+    }
+
+    public async chatWithAssistant(chatWithAssistantDto: ChatWithAssistantDto): Promise<ChatResponseEntity> {
+        // const { assistantId } = chatWithAssistantDto
+        // const assistant = await prisma.assistant.findUnique({
+        //     where: {
+        //         id: assistantId
+        //     }
+        // })
+        // if (!assistant) {
+        //     throw AppError.notFound('Assistant with assistantId do not exist');
+        // }
+
+        const llm = new ChatOpenAI({ modelName: "gpt-4o" });
+
+        // Research agent and node
+        const newAgent = await createAgent({
+            llm,
+            tools: [],
+            systemMessage:
+                "You should provide accurate data for the chart generator to use.",
+        });
+
+        const results = await agentNode({
+            messages: [new HumanMessage("Research the US primaries in 2024")],
+            sender: "User",
+        }, newAgent, "Assistant")
+
+        return ChatResponseEntity.fromJson({ assistantId: "lol", prompt: "something", response: results })
     }
 }

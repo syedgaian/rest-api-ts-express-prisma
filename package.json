@@ -56,6 +56,8 @@
 		"typescript": "^5.5.4"
 	},
 	"dependencies": {
+		"@langchain/langgraph": "^0.1.4",
+		"@langchain/openai": "^0.2.8",
 		"@prisma/client": "5.18.0",
 		"@types/morgan": "^1.9.9",
 		"compression": "^1.7.4",

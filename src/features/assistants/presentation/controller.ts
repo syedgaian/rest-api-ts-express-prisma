@@ -6,6 +6,9 @@ import { type SuccessResponse, HttpCode, ONE, TEN } from '../../../core';
 import { PaginationDto, type PaginationResponseEntity } from '../../shared';
 
 import {
+    ChatResponseEntity,
+    ChatWithAssistant,
+    ChatWithAssistantDto,
     CreateAssistant,
     CreateAssistantDto,
     CreateAssistantWithConfig,
@@ -29,6 +32,11 @@ interface RequestBody {
 
 interface CreateQueryParams {
     withConfig: boolean
+}
+
+interface ChatRequestBody {
+    prompt: string,
+    assistantId: string
 }
 
 interface RequestQuery {
@@ -65,5 +73,20 @@ export class AssistantController {
                 .catch(next);
         }
     };
+
+    public chatWithAssistant(
+        req: Request<unknown, unknown, ChatRequestBody>,
+        res: Response<SuccessResponse<ChatResponseEntity>>,
+        next: NextFunction
+    ) {
+        const { prompt, assistantId } = req.body;
+
+        const chatWithAssistantDto = ChatWithAssistantDto.create({ prompt, assistantId });
+        new ChatWithAssistant(this.assistantRepository)
+            .execute(chatWithAssistantDto)
+            .then((data) => res.status(HttpCode.OK).json({ data }))
+            .catch(next)
+
+    }
 
 }

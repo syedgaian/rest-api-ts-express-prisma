@@ -8,6 +8,8 @@ import {
     type CreateAssistantDto,
     type AssistantDataSource,
     CreateAssistantWithConfigDto,
+    ChatResponseEntity,
+    ChatWithAssistantDto,
 } from '../domain';
 
 export class AssistantRepositoryImpl implements AssistantRepository {
@@ -19,5 +21,9 @@ export class AssistantRepositoryImpl implements AssistantRepository {
 
     async createWithConfig(createWithConfigDto: CreateAssistantWithConfigDto): Promise<AssistantEntity> {
         return await this.datasource.createWithConfig(createWithConfigDto);
+    }
+
+    async chatWithAssistant(chatWithAssistantDto: ChatWithAssistantDto): Promise<ChatResponseEntity> {
+        return await this.datasource.chatWithAssistant(chatWithAssistantDto);
     }
 }

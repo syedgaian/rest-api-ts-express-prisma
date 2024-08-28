@@ -21,6 +21,7 @@ export class AssistantRoutes {
         const authMiddleware = new AuthMiddleware(authRepository);
 
         router.post('/', [authMiddleware.validateJWT], controller.create);
+        router.post("/chat", controller.chatWithAssistant);
 
         // rest of operations
         // ...
