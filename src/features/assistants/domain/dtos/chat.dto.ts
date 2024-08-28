@@ -21,7 +21,7 @@ export class ChatAssistantDto implements CoreDto<ChatAssistantDto> {
             errors.push({ constraint: 'prompt is required', fields: ['prompt'] });
         }
 
-        if (errors.length > ZERO) throw AppError.badRequest('Error validating create Assistant', errors);
+        if (errors.length > ZERO) throw AppError.badRequest('Error validating create chat Assistant', errors);
     }
 
     /**
