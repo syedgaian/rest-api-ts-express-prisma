@@ -3,7 +3,6 @@ model AssistantConfig {
   assistantId  String      @unique
   instructions String
   tools        String[]
-  maxTokens    Int
   temperature  Float
   topP         Float
   agentType    String

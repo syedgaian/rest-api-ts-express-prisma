@@ -8,13 +8,12 @@ import {
     type AuthDatasource,
     type LoginUserDto
 } from '../domain';
-import { PrismaClient } from '@prisma/client'
+import { prisma } from "../../../client";
 
 export class AuthDatasourceImpl implements AuthDatasource {
-    private readonly prisma = new PrismaClient({})
 
     public async register(dto: RegisterUserDto): Promise<AuthEntity> {
-        const existingUser = await this.prisma.user.findUnique({
+        const existingUser = await prisma.user.findUnique({
             where: {
                 email: dto.email
             }
@@ -23,7 +22,7 @@ export class AuthDatasourceImpl implements AuthDatasource {
             throw AppError.badRequest('User already exists', [{ constraint: 'User already exists', fields: ['email'] }]);
         }
 
-        const newUser = await this.prisma.user.create({
+        const newUser = await prisma.user.create({
             data: {
                 name: dto.name,
                 email: dto.email,
@@ -39,7 +38,7 @@ export class AuthDatasourceImpl implements AuthDatasource {
     }
 
     public async login(dto: LoginUserDto): Promise<AuthEntity> {
-        const existingUser = await this.prisma.user.findUnique({
+        const existingUser = await prisma.user.findUnique({
             where: {
                 email: dto.email
             }
@@ -56,7 +55,7 @@ export class AuthDatasourceImpl implements AuthDatasource {
     }
 
     public async getUserById(userId: string): Promise<UserEntity> {
-        const existingUser = await this.prisma.user.findUnique({
+        const existingUser = await prisma.user.findUnique({
             where: {
                 id: userId
             }

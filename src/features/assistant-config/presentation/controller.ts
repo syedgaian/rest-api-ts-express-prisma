@@ -18,6 +18,7 @@ interface Params {
 
 interface RequestBody {
     assistantId: string,
+    instructions: string,
     tools?: Array<string>,
     temperature?: number,
     topP?: number,
@@ -42,8 +43,8 @@ export class AssistantConfigController {
         res: Response<SuccessResponse<AssistantConfigEntity>>,
         next: NextFunction
     ): void => {
-        const { assistantId, tools = [], temperature, topP, agentType, model, deployedAt, lastActiveAt } = req.body;
-        const createDto = CreateAssistantConfigDto.create({ assistantId, tools, temperature, topP, agentType, model, deployedAt, lastActiveAt });
+        const { assistantId, instructions, tools = [], temperature, topP, agentType, model, deployedAt, lastActiveAt } = req.body;
+        const createDto = CreateAssistantConfigDto.create({ assistantId, instructions, tools, temperature, topP, agentType, model, deployedAt, lastActiveAt });
         new CreateAssistantConfig(this.repository)
             .execute(createDto)
             .then((result) => res.status(HttpCode.CREATED).json({ data: result }))
