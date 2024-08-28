@@ -7,9 +7,9 @@ model AssistantConfig {
   topP         Float
   agentType    String
   model        String
-  deployedAt   DateTime?
-  lastActiveAt DateTime?
   createdAt    DateTime    @default(now())
   updatedAt    DateTime    @updatedAt
-  Assistant    Assistant @relation(fields: [assistantId], references: [id])
+  Assistant    Assistant   @relation(fields: [assistantId], references: [id])
+  deployedAt   DateTime?
+  lastActiveAt DateTime?
 }

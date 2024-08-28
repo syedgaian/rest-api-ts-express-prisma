@@ -7,6 +7,7 @@ import {
     type AssistantEntity,
     type CreateAssistantDto,
     type AssistantDataSource,
+    CreateAssistantWithConfigDto,
 } from '../domain';
 
 export class AssistantRepositoryImpl implements AssistantRepository {
@@ -14,5 +15,9 @@ export class AssistantRepositoryImpl implements AssistantRepository {
 
     async create(createDto: CreateAssistantDto): Promise<AssistantEntity> {
         return await this.datasource.create(createDto);
+    }
+
+    async createWithConfig(createWithConfigDto: CreateAssistantWithConfigDto): Promise<AssistantEntity> {
+        return await this.datasource.createWithConfig(createWithConfigDto);
     }
 }

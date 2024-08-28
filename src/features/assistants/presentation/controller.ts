@@ -8,11 +8,12 @@ import { PaginationDto, type PaginationResponseEntity } from '../../shared';
 import {
     CreateAssistant,
     CreateAssistantDto,
+    CreateAssistantWithConfig,
+    CreateAssistantWithConfigDto,
     type AssistantConfigEntity,
     type AssistantEntity,
     type AssistantRepository
 } from '../domain';
-import { AssistantConfigRepository, CreateAssistantConfig, CreateAssistantConfigDto } from '../../assistant-config';
 
 interface Params {
     id: string;
@@ -39,7 +40,6 @@ export class AssistantController {
     //* Dependency injection
     constructor(
         private readonly assistantRepository: AssistantRepository,
-        private readonly assistantConfigRepository: AssistantConfigRepository
     ) { }
 
 
@@ -50,23 +50,20 @@ export class AssistantController {
     ): void => {
         const { name, version, description, status, config = {} } = req.body;
         const { withConfig = false } = req.query;
-        const createDto = CreateAssistantDto.create({ name, version, description, status });
-        new CreateAssistant(this.assistantRepository)
-            .execute(createDto)
-            .then((assistant) => {
-                if (withConfig) {
-                    const createConfigDto = CreateAssistantConfigDto.create({ assistantId: assistant.id, ...config });
-                    new CreateAssistantConfig(this.assistantConfigRepository)
-                        .execute(createConfigDto)
-                        .then((config) => {
-                            return res.status(HttpCode.CREATED).json({ data: { ...assistant, config } })
-                        })
-                        .catch(next);
-                } else {
-                    return res.status(HttpCode.CREATED).json({ data: assistant })
-                }
-            })
-            .catch(next);
+        if (withConfig) {
+            const createWithConfigDto = CreateAssistantWithConfigDto.create({ name, version, description, status, config });
+            new CreateAssistantWithConfig(this.assistantRepository)
+                .execute(createWithConfigDto)
+                .then((assistant) => res.status(HttpCode.CREATED).json({ data: assistant }))
+                .catch(next);
+
+        } else {
+            const createDto = CreateAssistantDto.create({ name, version, description, status });
+            new CreateAssistant(this.assistantRepository)
+                .execute(createDto)
+                .then((assistant) => res.status(HttpCode.CREATED).json({ data: assistant }))
+                .catch(next);
+        }
     };
 
 }
