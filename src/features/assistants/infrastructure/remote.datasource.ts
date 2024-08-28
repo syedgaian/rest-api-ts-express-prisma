@@ -69,21 +69,29 @@ export class AssistantDatasourceImpl implements AssistantDataSource {
         // if (!assistant) {
         //     throw AppError.notFound('Assistant with assistantId do not exist');
         // }
+        let results = {}
+        try {
 
-        const llm = new ChatOpenAI({ modelName: "gpt-4o" });
+            const llm = new ChatOpenAI({ modelName: "gpt-4o" });
 
-        // Research agent and node
-        const newAgent = await createAgent({
-            llm,
-            tools: [],
-            systemMessage:
-                "You should provide accurate data for the chart generator to use.",
-        });
+            // Research agent and node
+            const newAgent = await createAgent({
+                llm,
+                tools: [],
+                systemMessage:
+                    "You should provide accurate data for the chart generator to use.",
+            });
 
-        const results = await agentNode({
-            messages: [new HumanMessage("Research the US primaries in 2024")],
-            sender: "User",
-        }, newAgent, "Assistant")
+            results = await agentNode({
+                messages: [new HumanMessage("Research the US primaries in 2024")],
+                sender: "User",
+            }, newAgent, "Assistant")
+
+        } catch (error) {
+            console.log(error)
+        }
+
+
 
         return ChatResponseEntity.fromJson({ assistantId: "lol", prompt: "something", response: results })
     }

@@ -74,11 +74,11 @@ export class AssistantController {
         }
     };
 
-    public chatWithAssistant(
+    public chatWithAssistant = (
         req: Request<unknown, unknown, ChatRequestBody>,
         res: Response<SuccessResponse<ChatResponseEntity>>,
         next: NextFunction
-    ) {
+    ) => {
         const { prompt, assistantId } = req.body;
 
         const chatWithAssistantDto = ChatWithAssistantDto.create({ prompt, assistantId });
@@ -86,7 +86,6 @@ export class AssistantController {
             .execute(chatWithAssistantDto)
             .then((data) => res.status(HttpCode.OK).json({ data }))
             .catch(next)
-
     }
 
 }
