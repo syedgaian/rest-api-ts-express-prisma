@@ -72,7 +72,7 @@ export class AssistantDatasourceImpl implements AssistantDataSource {
         let results = {}
         try {
 
-            const llm = new ChatOpenAI({ modelName: "gpt-4o" });
+            const llm = new ChatOpenAI({ modelName: "gpt-4" });
 
             // Research agent and node
             const newAgent = await createAgent({
@@ -86,6 +86,8 @@ export class AssistantDatasourceImpl implements AssistantDataSource {
                 messages: [new HumanMessage("Research the US primaries in 2024")],
                 sender: "User",
             }, newAgent, "Assistant")
+
+            console.log(AgentState.State)
 
         } catch (error) {
             console.log(error)

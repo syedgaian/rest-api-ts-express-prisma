@@ -10,11 +10,9 @@ export interface ChatWithAssisTantUseCase {
 
 export class ChatWithAssistant implements ChatWithAssisTantUseCase {
     constructor(private readonly repository: AssistantRepository) {
-        console.log("created")
     }
 
     async execute(data: ChatWithAssistantDto): Promise<ChatResponseEntity> {
-        console.log(data, "here")
         return await this.repository.chatWithAssistant(data);
     }
 }
