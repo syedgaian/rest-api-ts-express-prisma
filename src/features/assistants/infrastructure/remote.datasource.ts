@@ -4,18 +4,20 @@ import { ONE, ZERO, AppError } from '../../../core';
 import { type PaginationDto, type PaginationResponseEntity } from '../../shared';
 import {
     AssistantEntity,
+    ChatResponseEntity,
+    AssistantConfigEntity,
     type CreateAssistantDto,
     type AssistantDataSource,
     type CreateAssistantWithConfigDto,
-    ChatResponseEntity,
-    ChatWithAssistantDto,
-    AssistantConfigEntity
+    type ChatWithAssistantDto,
 } from '../domain';
 import { prisma } from "../../../client"
 import "dotenv/config";
 import { HumanMessage } from "@langchain/core/messages";
 import { LangGraphHelper } from '../helpers';
 import { CheckpointSaver } from '../helpers/CheckpointSaver';
+import { pipeline } from "node:stream/promises";
+import { createStreamableValue } from "../helpers/create-streamable"
 
 
 export class AssistantDatasourceImpl implements AssistantDataSource {
@@ -77,8 +79,9 @@ export class AssistantDatasourceImpl implements AssistantDataSource {
             throw AppError.badRequest('Assistant configuration is not complete!');
         }
 
-        let results = {}
+        let results;
         let threadId = null;
+        const stream = createStreamableValue();
         try {
             if (!existingThreadId) {
 
@@ -105,20 +108,36 @@ export class AssistantDatasourceImpl implements AssistantDataSource {
                     thread_id: threadId,
                     checkpoint_ns: "default" // addition of checkpoint name space for future
                 },
+                streamMode: "values" as const
             };
 
-
-            results = await agent.invoke({
-                messages: [new HumanMessage(prompt)],
+            results = await agent.stream({
+                messages: [new HumanMessage(prompt)]
             }, config);
+
+            // results.pipeThrough()
+
+            for await (const event of results) {
+                const recentMsg = event.messages[event.messages.length - 1];
+                console.log(`================================ ${recentMsg._getType()} Message (1) =================================`)
+                if (recentMsg._getType() === "ai") {
+
+                }
+                console.log(recentMsg.content);
+                stream.update(JSON.parse(JSON.stringify(event, null, 2)));
+                // await pipeline(recentMsg.content);
+            }
+
+            stream.done();
+
 
         } catch (error) {
             console.log(error)
             throw AppError.internalServer('Failed to initiate chat!');
         }
 
+        console.log("here where stream")
 
-
-        return ChatResponseEntity.fromJson({ assistantId: assistantId, prompt: prompt, threadId, response: results })
+        return ChatResponseEntity.fromJson({ assistantId: assistantId, prompt: prompt, threadId, response: { stream: stream.value } })
     }
 }

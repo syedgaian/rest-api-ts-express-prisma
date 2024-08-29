@@ -264,6 +264,7 @@ export class CheckpointSaver extends BaseCheckpointSaver {
                 },
                 create: {
                     thread_id,
+                    checkpoint_ns,
                     checkpoint_id: checkpoint.id,
                     parent_id: config.configurable?.checkpoint_id,
                     checkpoint: CustomSerializer.stringify(checkpoint),
