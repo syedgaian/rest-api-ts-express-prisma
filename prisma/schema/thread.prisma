@@ -1,0 +1,9 @@
+
+model Thread {
+  id          String       @id @default(cuid()) // Unique identifier for each thread
+  checkpoints Checkpoint[] @relation(fields: [id], references: [thread_id]) // Relation to checkpoints
+  
+  // Additional fields related to Thread can be added here, if needed
+  createdAt   DateTime     @default(now())
+  updatedAt   DateTime     @updatedAt
+}
