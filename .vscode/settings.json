@@ -1,3 +1,14 @@
 {
-	"cSpell.words": ["datasource", "datasources", "dtos", "Encript", "LANGGRAPH", "OPENAI", "TOPP", "usecase", "usecases"]
+	"cSpell.words": [
+		"datasource",
+		"datasources",
+		"dtos",
+		"Encript",
+		"langchain",
+		"LANGGRAPH",
+		"OPENAI",
+		"TOPP",
+		"usecase",
+		"usecases"
+	]
 }

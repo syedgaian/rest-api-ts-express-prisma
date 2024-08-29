@@ -16,6 +16,11 @@ import { ChatOpenAI } from '@langchain/openai';
 import { createAgent, agentNode } from '../helpers';
 import { AgentState } from '../config';
 import { HumanMessage } from "@langchain/core/messages";
+import { ChatPromptTemplate } from "@langchain/core/prompts";
+import { pull } from "langchain/hub";
+import { createOpenAIFunctionsAgent, createToolCallingAgent } from "langchain/agents";
+import { LangGraphHelper } from '../helpers';
+import { MemorySaver } from "@langchain/langgraph";
 
 
 export class AssistantDatasourceImpl implements AssistantDataSource {
@@ -71,23 +76,25 @@ export class AssistantDatasourceImpl implements AssistantDataSource {
         // }
         let results = {}
         try {
+            const llm = LangGraphHelper.createLlm("gpt-3.5-turbo", 0, 1)
 
-            const llm = new ChatOpenAI({ modelName: "gpt-4" });
+            const memory = new MemorySaver()
+            const agent = LangGraphHelper.createReactAssistantWithMemory(llm, [], "hello", memory)
 
-            // Research agent and node
-            const newAgent = await createAgent({
-                llm,
-                tools: [],
-                systemMessage:
-                    "You should provide accurate data for the chart generator to use.",
-            });
+            console.log(memory.storage)
 
-            results = await agentNode({
-                messages: [new HumanMessage("Research the US primaries in 2024")],
-                sender: "User",
-            }, newAgent, "Assistant")
 
-            console.log(AgentState.State)
+            const config = {
+                configurable: {
+                    thread_id: "test-thread",
+                },
+            };
+
+
+            results = await agent.invoke({
+                messages: [new HumanMessage("can you create a simple function to extract day from iso date string")],
+            }, config)
+            console.log(memory.storage)
 
         } catch (error) {
             console.log(error)
