@@ -36,7 +36,8 @@ interface CreateQueryParams {
 
 interface ChatRequestBody {
     prompt: string,
-    assistantId: string
+    assistantId: string,
+    threadId?: string
 }
 
 interface RequestQuery {
@@ -79,9 +80,9 @@ export class AssistantController {
         res: Response<SuccessResponse<ChatResponseEntity>>,
         next: NextFunction
     ) => {
-        const { prompt, assistantId } = req.body;
+        const { prompt, assistantId, threadId } = req.body;
 
-        const chatWithAssistantDto = ChatWithAssistantDto.create({ prompt, assistantId });
+        const chatWithAssistantDto = ChatWithAssistantDto.create({ prompt, assistantId, threadId });
         new ChatWithAssistant(this.assistantRepository)
             .execute(chatWithAssistantDto)
             .then((data) => res.status(HttpCode.OK).json({ data }))

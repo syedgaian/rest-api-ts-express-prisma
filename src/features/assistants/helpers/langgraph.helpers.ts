@@ -1,21 +1,17 @@
 import { createReactAgent } from "@langchain/langgraph/prebuilt";
 import { SystemMessage } from "@langchain/core/messages";
 import { StructuredTool } from "@langchain/core/tools";
-import { ChatOpenAI } from "@langchain/openai";
+import { ChatOpenAI, ChatOpenAICallOptions, ChatOpenAIFields, ClientOptions, LegacyOpenAIInput } from "@langchain/openai";
 import { AgentExecutor, createOpenAIFunctionsAgent } from 'langchain/agents';
 import { type RunnableConfig, Runnable } from "@langchain/core/runnables";
 import { ZodObjectAny } from "@langchain/core/dist/types/zod";
 import { AgentRunnableSequence } from "langchain/dist/agents/agent";
-import { MemorySaver } from "@langchain/langgraph";
+import { BaseCheckpointSaver, MemorySaver } from "@langchain/langgraph";
 
 export class LangGraphHelper {
 
-    public static createLlm(model: string, temperature: number, topP: number) {
-        return new ChatOpenAI({
-            model: model,
-            temperature: temperature,
-            topP: topP
-        })
+    public static createOpenAILlm<ChatOpenAICallOptions>(fields: ChatOpenAIFields, configurations?: ClientOptions) {
+        return new ChatOpenAI(fields, configurations)
     }
 
     public static createReactAssistant(llm: ChatOpenAI, tools: Array<StructuredTool>, instructions: string,) {
@@ -26,7 +22,7 @@ export class LangGraphHelper {
         })
     }
 
-    public static createReactAssistantWithMemory(llm: ChatOpenAI, tools: Array<StructuredTool>, instructions: string, memory: MemorySaver) {
+    public static createReactAssistantWithMemory(llm: ChatOpenAI, tools: Array<StructuredTool>, instructions: string, memory: any) {
         return createReactAgent({
             llm,
             tools,

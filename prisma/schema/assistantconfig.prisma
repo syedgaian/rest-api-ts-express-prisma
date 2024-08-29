@@ -1,15 +1,15 @@
 model AssistantConfig {
-  id           String      @id @default(uuid())
-  assistantId  String      @unique
+  id           String    @id @default(uuid())
+  assistantId  String    @unique
   instructions String
   tools        String[]
   temperature  Float
   topP         Float
   agentType    String
   model        String
-  createdAt    DateTime    @default(now())
-  updatedAt    DateTime    @updatedAt
-  Assistant    Assistant   @relation(fields: [assistantId], references: [id])
+  createdAt    DateTime  @default(now())
+  updatedAt    DateTime  @updatedAt
+  Assistant    Assistant @relation(fields: [assistantId], references: [id])
   deployedAt   DateTime?
   lastActiveAt DateTime?
 }

@@ -1,12 +1,14 @@
-
 model Checkpoint {
-  thread_id      String
-  checkpoint_id  String
-  parent_id      String? 
-  checkpoint     Bytes    
-  metadata       Bytes    
-  parent         Checkpoint? @relation("ParentChild", fields: [parent_id], references: [checkpoint_id])
-  children       Checkpoint[] @relation("ParentChild")
-  
+  thread_id     String
+  checkpoint_id String       @unique
+  checkpoint_ns String
+  parent_id     String?
+  checkpoint    Bytes
+  metadata      Bytes
+  parent        Checkpoint?  @relation("ParentChild", fields: [parent_id], references: [checkpoint_id])
+  children      Checkpoint[] @relation("ParentChild")
+  Thread        Thread?      @relation(fields: [threadId], references: [id])
+  threadId      String?
+
   @@id([thread_id, checkpoint_id])
 }

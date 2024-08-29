@@ -5,6 +5,7 @@ export class ChatWithAssistantDto implements CoreDto<ChatWithAssistantDto> {
     private constructor(
         public readonly assistantId: string,
         public readonly prompt: string,
+        public readonly threadId?: string
     ) {
         this.validate(this);
     }
@@ -31,11 +32,20 @@ export class ChatWithAssistantDto implements CoreDto<ChatWithAssistantDto> {
      * @returns A new instance of this DTO
      */
     public static create(object: Record<string, unknown>): ChatWithAssistantDto {
-        const { assistantId, prompt } = object;
+        const { assistantId, prompt, threadId } = object;
+
+        if (threadId) {
+            return new ChatWithAssistantDto(
+                assistantId as string,
+                prompt as string,
+                threadId as string
+            );
+        }
 
         return new ChatWithAssistantDto(
             assistantId as string,
-            prompt as string
+            prompt as string,
         );
+
     }
 }

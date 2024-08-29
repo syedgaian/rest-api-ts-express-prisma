@@ -8,19 +8,14 @@ import {
     type AssistantDataSource,
     type CreateAssistantWithConfigDto,
     ChatResponseEntity,
-    ChatWithAssistantDto
+    ChatWithAssistantDto,
+    AssistantConfigEntity
 } from '../domain';
 import { prisma } from "../../../client"
 import "dotenv/config";
-import { ChatOpenAI } from '@langchain/openai';
-import { createAgent, agentNode } from '../helpers';
-import { AgentState } from '../config';
 import { HumanMessage } from "@langchain/core/messages";
-import { ChatPromptTemplate } from "@langchain/core/prompts";
-import { pull } from "langchain/hub";
-import { createOpenAIFunctionsAgent, createToolCallingAgent } from "langchain/agents";
 import { LangGraphHelper } from '../helpers';
-import { MemorySaver } from "@langchain/langgraph";
+import { CheckpointSaver } from '../helpers/CheckpointSaver';
 
 
 export class AssistantDatasourceImpl implements AssistantDataSource {
@@ -65,43 +60,65 @@ export class AssistantDatasourceImpl implements AssistantDataSource {
     }
 
     public async chatWithAssistant(chatWithAssistantDto: ChatWithAssistantDto): Promise<ChatResponseEntity> {
-        // const { assistantId } = chatWithAssistantDto
-        // const assistant = await prisma.assistant.findUnique({
-        //     where: {
-        //         id: assistantId
-        //     }
-        // })
-        // if (!assistant) {
-        //     throw AppError.notFound('Assistant with assistantId do not exist');
-        // }
+        const { assistantId, prompt, threadId: existingThreadId } = chatWithAssistantDto;
+
+        const assistant = await prisma.assistant.findUnique({
+            where: {
+                id: assistantId
+            },
+            include: {
+                config: true
+            }
+        })
+        if (!assistant) {
+            throw AppError.notFound('Assistant with assistantId do not exist');
+        }
+        if (!assistant.config) {
+            throw AppError.badRequest('Assistant configuration is not complete!');
+        }
+
         let results = {}
+        let threadId = null;
         try {
-            const llm = LangGraphHelper.createLlm("gpt-3.5-turbo", 0, 1)
+            if (!existingThreadId) {
 
-            const memory = new MemorySaver()
-            const agent = LangGraphHelper.createReactAssistantWithMemory(llm, [], "hello", memory)
+                const thread = await prisma.thread.create({
+                    data: {}
+                })
+                threadId = thread.id;
+            } else {
+                threadId = existingThreadId;
+            }
 
-            console.log(memory.storage)
+
+            const { model, temperature, topP, instructions } = assistant.config as AssistantConfigEntity;
+            const llm = LangGraphHelper.createOpenAILlm({
+                model, temperature, topP
+            })
+
+            const memory = new CheckpointSaver()
+            const agent = LangGraphHelper.createReactAssistantWithMemory(llm, [], instructions, memory)
 
 
             const config = {
                 configurable: {
-                    thread_id: "test-thread",
+                    thread_id: threadId,
+                    checkpoint_ns: "default" // addition of checkpoint name space for future
                 },
             };
 
 
             results = await agent.invoke({
-                messages: [new HumanMessage("can you create a simple function to extract day from iso date string")],
-            }, config)
-            console.log(memory.storage)
+                messages: [new HumanMessage(prompt)],
+            }, config);
 
         } catch (error) {
             console.log(error)
+            throw AppError.internalServer('Failed to initiate chat!');
         }
 
 
 
-        return ChatResponseEntity.fromJson({ assistantId: "lol", prompt: "something", response: results })
+        return ChatResponseEntity.fromJson({ assistantId: assistantId, prompt: prompt, threadId, response: results })
     }
 }
