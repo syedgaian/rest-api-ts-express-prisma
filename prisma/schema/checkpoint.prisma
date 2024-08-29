@@ -1,0 +1,12 @@
+
+model Checkpoint {
+  thread_id      String
+  checkpoint_id  String
+  parent_id      String? 
+  checkpoint     Bytes    
+  metadata       Bytes    
+  parent         Checkpoint? @relation("ParentChild", fields: [parent_id], references: [checkpoint_id])
+  children       Checkpoint[] @relation("ParentChild")
+  
+  @@id([thread_id, checkpoint_id])
+}
