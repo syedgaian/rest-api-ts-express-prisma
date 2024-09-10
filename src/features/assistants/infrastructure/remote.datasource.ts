@@ -123,8 +123,9 @@ export class AssistantDatasourceImpl implements AssistantDataSource {
                 if (recentMsg._getType() === "ai") {
 
                 }
+
+                stream.update(recentMsg.content);
                 console.log(recentMsg.content);
-                stream.update(JSON.parse(JSON.stringify(event, null, 2)));
                 // await pipeline(recentMsg.content);
             }
 
